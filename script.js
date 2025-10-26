@@ -31,3 +31,37 @@ if(formEl){
   });
 }
 
+/* --- Auto-close navbar on mobile --- */
+(() => {
+  const collapseEl = document.getElementById('nav');          // .navbar-collapse
+  const toggler    = document.querySelector('.navbar-toggler');
+  if (!collapseEl || !toggler) return;
+
+  // Utilidad: ¿estamos en modo móvil (toggler visible)?
+  const isMobile = () => getComputedStyle(toggler).display !== 'none';
+
+  // Cerrar al tocar un link/botón del menú
+  collapseEl.querySelectorAll('.nav-link, .btn').forEach(el => {
+    el.addEventListener('click', () => {
+      if (isMobile() && collapseEl.classList.contains('show')) {
+        bootstrap.Collapse.getOrCreateInstance(collapseEl).hide();
+      }
+    });
+  });
+
+  // Cerrar si se toca fuera del menú cuando está abierto
+  document.addEventListener('click', (e) => {
+    const open = collapseEl.classList.contains('show');
+    const clickedInside = collapseEl.contains(e.target) || toggler.contains(e.target);
+    if (open && isMobile() && !clickedInside) {
+      bootstrap.Collapse.getOrCreateInstance(collapseEl).hide();
+    }
+  });
+
+  // Cerrar en cambios de hash (anclas)
+  window.addEventListener('hashchange', () => {
+    if (isMobile() && collapseEl.classList.contains('show')) {
+      bootstrap.Collapse.getOrCreateInstance(collapseEl).hide();
+    }
+  });
+})();

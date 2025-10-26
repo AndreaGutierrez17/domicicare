@@ -30,3 +30,4 @@ if(formEl){
     window.open(waBase+encodeURIComponent(msg),'_blank');
   });
 }
+
